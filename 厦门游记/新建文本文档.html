@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>厦门游记</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Times new Roman', '华文楷体';
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        #main-section {
+            height: 100vh;
+            background: url('1.jpg'); /* Combine gradient and image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column; /* Updated to column layout */
+            align-items: flex-start; /* Align to the start of the column */
+            justify-content: center; /* Center content vertically */
+            color: white;
+            text-align: left; /* Align text to the left */
+            padding: 20px;
+            position: relative; /* Set position to relative */
+        }
+		
+		#main-section h1,
+		#countdown {
+			cursor: pointer;
+			transition: transform 0.2s; /* Added transition for smooth scaling effect */
+		}
+
+		#main-section h1:hover,
+		#countdown:hover {
+			transform: scale(1.05); /* Slightly scale up on hover */
+		}
+
+        .floating-button {
+		    font-family: 'Times new Roman', '华文楷体';
+            margin-top: 10px; /* Adjusted margin for spacing */
+            cursor: pointer;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: left; /* Align text to the left */
+            transition: transform 0.2s; /* Added transition for smooth scaling effect */
+        }
+
+        .floating-button:hover {
+            transform: scale(1.05); /* Slightly scale up on hover */
+        }
+
+        #content-container {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+            position: absolute; /* Set position to absolute */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Center using transform */
+        }
+
+        #copyright {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            opacity: 0;
+            animation: fadeInBottom 2s ease-out forwards;
+        }
+
+        #countdown {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="main-section">
+        <h1>厦门游记</h1>
+        <button class="floating-button" onclick="showContent('details')">日程</button>
+        <button class="floating-button" onclick="showContent('map')">地图</button>
+        <button class="floating-button" onclick="showContent('other')">后记</button>
+
+        <div id="content-container">
+            <p id="details-content" style="display: none;">时间：2024/01/26 14：00-28 22：29 <br> 地点：厦门</p>
+            <p id="map-content" style="display: none;">地图内容在这里</p>
+            <p id="other-content" style="display: none;">其他内容在这里</p>
+        </div>
+
+        <div id="countdown">距离我们见面: <span id="days"></span>天 <span id="hours"></span>时 <span id="minutes"></span>分 <span id="seconds"></span>秒</div>
+    </div>
+
+    <div id="copyright">
+        &copy; HG. All Rights Reserved
+    </div>
+	
+	#progress-bar {
+            height: 20px;
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #progress-bar-fill {
+            height: 100%;
+            width: 0;
+            background-color: #4caf50;
+            border-radius: 10px;
+        }
+
+    <script>
+        function showContent(category) {
+            // Hide all content elements
+            document.querySelectorAll('#content-container p').forEach(element => {
+                element.style.display = 'none';
+            });
+
+            // Show the selected content
+            const selectedContent = document.getElementById(`${category}-content`);
+            selectedContent.style.display = 'block';
+
+            // Fade in the content container
+            const contentContainer = document.getElementById('content-container');
+            contentContainer.style.opacity = 1;
+        }
+
+        // Countdown timer function
+        function startCountdown(endTime) {
+            const countdownDisplay = document.getElementById('countdown');
+            const daysDisplay = document.getElementById('days');
+            const hoursDisplay = document.getElementById('hours');
+            const minutesDisplay = document.getElementById('minutes');
+            const secondsDisplay = document.getElementById('seconds');
+
+            function updateCountdown() {
+                const now = new Date();
+                const timeDifference = endTime - now;
+
+                if (timeDifference <= 0) {
+                    // Countdown has ended
+                    countdownDisplay.textContent = "已结束";
+                    return;
+                }
+
+                const days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+                const hours = Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+                daysDisplay.textContent = days < 10 ? "0" + days : days;
+                hoursDisplay.textContent = hours < 10 ? "0" + hours : hours;
+                minutesDisplay.textContent = minutes < 10 ? "0" + minutes : minutes;
+                secondsDisplay.textContent = seconds < 10 ? "0" + seconds : seconds;
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial update
+        }
+
+        // Set your end time (replace with your desired end date and time)
+        const endTime = new Date('2024-01-28T22:29:59').getTime();
+        startCountdown(endTime);
+    </script>
+
+</body>
+
+</html>
