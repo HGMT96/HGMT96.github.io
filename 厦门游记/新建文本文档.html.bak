@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>厦门游记</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Times new Roman', '华文楷体';
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        #main-section {
+            height: 100vh;
+            background: url('1.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            color: white;
+            text-align: left;
+            padding: 20px;
+            position: relative;
+        }
+
+        #main-section h1,
+        #countdown {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #main-section h1:hover,
+        #countdown:hover {
+            transform: scale(1.05);
+        }
+
+        .floating-button {
+            font-family: 'Times new Roman', '华文楷体';
+            margin-top: 10px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: left;
+            transition: transform 0.2s;
+        }
+
+        .floating-button:hover {
+            transform: scale(1.05);
+        }
+
+        #content-container {
+            opacity: 0;
+            transition: opacity 3s ease-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #content-container p {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        #content-container p.show {
+            opacity: 1;
+        }
+
+        #copyright {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            opacity: 0;
+            animation: fadeInBottom 2s ease-out forwards;
+        }
+
+        #countdown {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="main-section">
+        <h1>厦门游记</h1>
+        <button class="floating-button" onclick="showContent('details')">日程</button>
+        <button class="floating-button" onclick="showContent('map')">地图</button>
+		<button class="floating-button" onclick="showContent('food')">吃啥</button>
+        <button class="floating-button" onclick="showContent('other')">后记</button>
+
+        <div id="content-container">
+            <p id="details-content" style="display: none;">时间：2024/01/26 14：00-28 22：29 <br> 地点：厦门<br></p>
+			
+            <p id="map-content" style="display: none;">地图</p>
+			<p id="food-content" style="display: none;">吃的</p>
+            <p id="other-content" style="display: none;">后记<br>
+			
+			<div id="separation-timer">我们已经分开: <span id="separation-days"></span>天 <span id="separation-hours"></span>时 <span id="separation-minutes"></span>分 <span id="separation-seconds"></span>秒</div>
+			
+			</p>
+        </div>
+		
+		
+
+        <div id="countdown">距离我们见面还剩: <span id="days"></span>天 <span id="hours"></span>时 <span
+                id="minutes"></span>分 <span id="seconds"></span>秒</div>
+    </div>
+
+    <div id="copyright">
+        &copy; HG. All Rights Reserved
+    </div>
+
+    <script>
+	
+	 function startSeparationTimer(startTime) {
+			const separationTimerDisplay = document.getElementById('separation-timer');
+			const separationDaysDisplay = document.getElementById('separation-days');
+			const separationHoursDisplay = document.getElementById('separation-hours');
+			const separationMinutesDisplay = document.getElementById('separation-minutes');
+			const separationSecondsDisplay = document.getElementById('separation-seconds');
+
+			function updateSeparationTimer() {
+				const now = new Date();
+				const timeDifference = now - startTime;
+
+				const days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+				const hours = Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+				const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+				const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+				separationDaysDisplay.textContent = days < 10 ? "0" + days : days;
+				separationHoursDisplay.textContent = hours < 10 ? "0" + hours : hours;
+				separationMinutesDisplay.textContent = minutes < 10 ? "0" + minutes : minutes;
+				separationSecondsDisplay.textContent = seconds < 10 ? "0" + seconds : seconds;
+			}
+
+			setInterval(updateSeparationTimer, 1000);
+			updateSeparationTimer(); // Initial update
+		}
+
+		// Set your start time for the separation timer (replace with your desired start date and time)
+		const startTime = new Date('2024-01-28T22:29:59').getTime();
+		startSeparationTimer(startTime);
+
+        function showContent(category) {
+			// Hide all content elements
+			document.querySelectorAll('#content-container p').forEach(element => {
+				element.style.display = 'none';
+				element.classList.remove('show'); // Remove the 'show' class
+			});
+
+			// Show the selected content
+			const selectedContent = document.getElementById(`${category}-content`);
+			selectedContent.style.display = 'block';
+			selectedContent.classList.add('show'); // Add the 'show' class
+
+			// Hide or show the separation timer based on the selected content
+			const separationTimer = document.getElementById('separation-timer');
+			if (category === 'other') {
+				separationTimer.style.display = 'block';
+			} else {
+				separationTimer.style.display = 'none';
+			}
+
+			// Fade in the content container
+			const contentContainer = document.getElementById('content-container');
+			contentContainer.style.opacity = 1;
+		}
+
+		// Your existing Countdown timer function...
+
+
+        // Countdown timer function
+        function startCountdown(endTime) {
+            const countdownDisplay = document.getElementById('countdown');
+            const daysDisplay = document.getElementById('days');
+            const hoursDisplay = document.getElementById('hours');
+            const minutesDisplay = document.getElementById('minutes');
+            const secondsDisplay = document.getElementById('seconds');
+
+            function updateCountdown() {
+                const now = new Date();
+                const timeDifference = endTime - now;
+
+                if (timeDifference <= 0) {
+                    // Countdown has ended
+                    countdownDisplay.textContent = "已结束";
+                    return;
+                }
+
+                const days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+                const hours = Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+                daysDisplay.textContent = days < 10 ? "0" + days : days;
+                hoursDisplay.textContent = hours < 10 ? "0" + hours : hours;
+                minutesDisplay.textContent = minutes < 10 ? "0" + minutes : minutes;
+                secondsDisplay.textContent = seconds < 10 ? "0" + seconds : seconds;
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial update
+        }
+
+        // Set your end time (replace with your desired end date and time)
+        const endTime = new Date('2024-01-28T22:29:59').getTime();
+        startCountdown(endTime);
+    </script>
+
+</body>
+
+</html>
